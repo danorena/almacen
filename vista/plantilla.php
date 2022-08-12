@@ -235,6 +235,16 @@ session_start();
       })
     })
   </script>
+  <script type="text/javascript">
+        $(document).ready(function(){
+        $("#limit-records").change(function(){
+        $('form').submit();
+        })
+        })
+        </script>
+        <style>
+        .active {background-color: #337ab7;border-color: #337ab7;}
+        </style>
 </body>
 
 </html>

@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="vista/css/producto.css">
 <script src="vista/js/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="vista/css/bootstrap.min.css" />  
+<script src="vista/js/bootstrap.min.js"></script>  
+<script src="vista/js/jquery.min.js"></script>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -16,12 +19,78 @@
 
   <!-- Main content -->
   <section class="content">
-
+  <?php 
+    $limit = isset($_POST["limit-records"]) ? $_POST["limit-records"] : 10;
+    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+    $start = ($page - 1) * $limit;
+    $objHumano = new ControladorProducto();
+    $custCount = $objHumano->ctrPaginarProductos();
+    $total = $custCount[0]['id']; 
+    $pages = ceil( $total / $limit ); 
+    
+    $Previous = $page - 1;
+    $Next = $page + 1;
+  ?>
     <!-- Default box -->
     <div class="box ">
       <div class="box-header with-border">
-        <!-- <button type="button" class='btn btn-primary' data-toggle="modal" data-target="#modalCrear"> CREAR PRODUCTO
-        </button> -->
+      <div class="col-md-10">
+        <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li>
+            <?php
+                if($Previous<=0){
+                    echo "<style>
+                    .previous
+                    {
+                        pointer-events:none;
+                    }
+                </style>";
+                    
+                }
+            ?>
+            <a class ="previous" href="productos-<?= $Previous; ?>" aria-label="Previous">
+                <span aria-hidden="true">« Anterior</span>
+            </a>
+            </li>
+            <?php for($i = 1; $i<= $pages; $i++) : 
+            if ($i==$page) {$active = "class='active'"; 
+            }else {$active = ""; } 
+            ?>
+            <li <?php echo $active; ?>><a href="productos-<?= $i; ?>"><?= $i; ?></a></li>
+            <?php endfor; ?> 
+            
+            <li>
+            <?php
+                if($Next-1==$pages){
+                    echo "<style>
+                    .next
+                    {
+                        pointer-events:none;
+                    }
+                </style>";
+                    
+                }
+            ?>
+            <a class ="next" href="productos-<?= $Next; ?>" aria-label="Next">
+                <span aria-hidden="true">Siguiente »</span>
+            </a>
+            </li>
+        </ul>
+        </nav>
+    </div> 
+    <div class="text-center" style="margin-top: 20px; " class="col-md-2">
+        <form method="post" action="#">Mostrar
+        <select name="limit-records" id="limit-records">
+        <?php foreach([10] as $limit): ?>
+            <option <?php if( isset($_POST["limit-records"]) && $_POST["limit-records"] == $limit) echo "selected" ?> value="<?= $limit; ?>"><?= $limit; ?></option>
+        <?php endforeach; ?>
+        </select>
+        resultados
+        </form>
+    </div>
+    </div>
+    <div style="overflow-y: auto;">
         <div class="box-tools pull-right">
           <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
             <i class="fa fa-minus"></i></button>
@@ -30,26 +99,26 @@
         </div>
       </div>
       <div class="table-responsive">
-        <table id="tablaHumano" class="table table-dark table-striped">
-          <thead>
-            <tr>
-              <th>id</th>
-              <th>Nombre</th>
-              <th>Producto</th>
-              <th>Categorias</th>
-              <th>Cantidad</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
+      <table id="" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Nombre</th>
+                    <th>Producto</th>
+                    <th>Categorias</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
           <tbody>
             <?php
 
             $objHumano = new ControladorProducto();
-            $arrayHumano = $objHumano->ctrListarProductos();
+            $arrayHumano = $objHumano->ctrListarProductos($start, $limit);
 
             foreach ($arrayHumano as $campo) {
               $cod = $campo['id_producto'];
-              $foto = "http://localhost/ALMACEN_SENA/vista/img/up/" . $campo['foto'];
+              $foto = "http://localhost/ALMACEN/vista/img/up/" . $campo['foto'];
             ?>
               <div>
 
