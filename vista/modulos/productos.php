@@ -49,7 +49,7 @@
                     
                 }
             ?>
-            <a class ="previous" href="productos-<?= $Previous; ?>" aria-label="Previous">
+            <a class ="previous" href="index.php?ruta=productos&page=<?= $Previous; ?>" aria-label="Previous">
                 <span aria-hidden="true">« Anterior</span>
             </a>
             </li>
@@ -57,7 +57,9 @@
             if ($i==$page) {$active = "class='active'"; 
             }else {$active = ""; } 
             ?>
-            <li <?php echo $active; ?>><a href="productos-<?= $i; ?>"><?= $i; ?></a></li>
+            <li <?php echo $active; ?>>
+            <a href="index.php?ruta=productos&page=<?= $i; ?>"><?= $i; ?></a>
+            </li>
             <?php endfor; ?> 
             
             <li>
@@ -72,7 +74,7 @@
                     
                 }
             ?>
-            <a class ="next" href="productos-<?= $Next; ?>" aria-label="Next">
+            <a class ="next" href="index.php?ruta=productos&page=<?= $Next; ?>" aria-label="Next">
                 <span aria-hidden="true">Siguiente »</span>
             </a>
             </li>
