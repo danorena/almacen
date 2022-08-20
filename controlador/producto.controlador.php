@@ -18,14 +18,43 @@ class ControladorProducto
             echo "Se ha presentado un error en la metodo constructor Proveedor " . $e->getMessage() . " El error se encuentra la linea: " . $e->getLine();
         }
     } //FIN DEL METODO CONSTRUCTOR
-    public function ctrListarProductos()
+    public function ctrListarProductos($start,$limit)
     {
         $objProveedorDao = new ProductoDao($this->objDtoProducto);
 
-        $arrayProveedor = $objProveedorDao->mdlListarProductos()->fetchAll();
+        $arrayProveedor = $objProveedorDao->mdlListarProductos($start,$limit)->fetchAll();
 
         return $arrayProveedor;
     } //metodo 
+    
+    public function ctrConsultarPorCategoria($categoria)
+    {
+        $objProveedorDao = new ProductoDao($this->objDtoProducto);
+
+        $arrayProveedor = $objProveedorDao->mdlConsultarPorCategoria($categoria)->fetchAll();
+        
+        return $arrayProveedor;
+    } //metodo
+
+    public function ctrConsultarPorProducto($producto)
+    {
+        $objProveedorDao = new ProductoDao($this->objDtoProducto);
+
+        $arrayProveedor = $objProveedorDao->mdlConsultarPorproducto($producto)->fetchAll();
+        
+        return $arrayProveedor;
+    } //metodo
+
+
+    public function ctrPaginarProductos()
+    {
+        $objProveedorDao = new ProductoDao($this->objDtoProducto);
+
+        $arrayProveedor = $objProveedorDao->mdlPaginarProductos()->fetchAll();
+
+        return $arrayProveedor;
+    } //metodo 
+
     public function ctrListarProducto($var)
     {
         $this->objDtoProducto->setId_producto($var);

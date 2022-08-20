@@ -324,12 +324,12 @@ class ProductoDao
             echo "Se ha presentado un error al listar los datos " . $ex->getMessage() . " El error se encuentra la linea: " . $ex->getLine();
         } // FIN DEL TRY-CATCH
     }
-    public function mdlListarProductos()
+    public function mdlListarProductos($start, $limit)
     {
         /*====================================================
                 INSGRESAR LA CONSULTA, PUEDE SER SP O QUERY
             ====================================================*/
-        $sql = "call SpConsultProductos();";
+            $sql = "SELECT * FROM productos LIMIT $start, $limit";
 
         try {
 
@@ -350,6 +350,9 @@ class ProductoDao
 
         return $resultSet;
     }
+
+    
+
     public function mdlListarProducto()
     {
         /*====================================================
@@ -377,6 +380,92 @@ class ProductoDao
 
         return $resultSet;
     }
+
+    public function mdlConsultarPorCategoria($categoria)
+    {
+        /*====================================================
+                INSGRESAR LA CONSULTA, PUEDE SER SP O QUERY
+            ====================================================*/
+        $sql = "call spConsultarProductosPorCategoria(?);";
+
+        try {
+
+            /*====================================================
+                            INSTACIAR LA BASE DE DATOS
+                ====================================================*/
+            $conexion = new Conexion();
+            $stmt = $conexion->conectar()->prepare($sql);
+            $stmt->bindParam(1, $categoria, PDO::PARAM_STR);
+
+            $stmt->execute();
+
+            $resultSet = $stmt;
+        } catch (Exception $e) {
+            echo "Se ha presentado un error en la clase DAO " . $e->getMessage() . " El error se encuentra la linea: " . $e->getLine();
+        } catch (PDOException $ex) {
+            echo "Se ha presentado un error al listar los datos " . $ex->getMessage() . " El error se encuentra la linea: " . $ex->getLine();
+        } // FIN DEL TRY-CATCH
+
+        return $resultSet;
+    }
+
+
+    public function mdlConsultarPorProducto($producto)
+    {
+        /*====================================================
+                INSGRESAR LA CONSULTA, PUEDE SER SP O QUERY
+            ====================================================*/
+        $sql = "call spConsultarProductosPorproducto(?);";
+
+        try {
+
+            /*====================================================
+                            INSTACIAR LA BASE DE DATOS
+                ====================================================*/
+            $conexion = new Conexion();
+            $stmt = $conexion->conectar()->prepare($sql);
+            $stmt->bindParam(1, $producto, PDO::PARAM_STR);
+
+            $stmt->execute();
+
+            $resultSet = $stmt;
+        } catch (Exception $e) {
+            echo "Se ha presentado un error en la clase DAO " . $e->getMessage() . " El error se encuentra la linea: " . $e->getLine();
+        } catch (PDOException $ex) {
+            echo "Se ha presentado un error al listar los datos " . $ex->getMessage() . " El error se encuentra la linea: " . $ex->getLine();
+        } // FIN DEL TRY-CATCH
+
+        return $resultSet;
+    }
+
+
+    function mdlPaginarProductos()
+			{
+			/*====================================================
+				INSGRESAR LA CONSULTA, PUEDE SER SP O QUERY
+			====================================================*/
+			$sql = "SELECT count(id_producto) AS id FROM productos";
+		
+			try {
+		
+				/*====================================================
+							INSTACIAR LA BASE DE DATOS
+					====================================================*/
+                $conexion = new Conexion();
+				$stmt = $conexion->conectar()->prepare($sql);
+		
+				$stmt->execute();
+		
+				$resultSet = $stmt;
+			} catch (Exception $e) {
+				echo "Se ha presentado un error en la clase DAO " . $e->getMessage() . " El error se encuentra la linea: " . $e->getLine();
+			} catch (PDOException $ex) {
+				echo "Se ha presentado un error al listar los datos " . $ex->getMessage() . " El error se encuentra la linea: " . $ex->getLine();
+			} // FIN DEL TRY-CATCH
+		
+			return $resultSet;
+		}
+
     public function mdlListarCategorias()
     {
         /*====================================================
