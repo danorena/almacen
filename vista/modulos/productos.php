@@ -67,46 +67,9 @@
             </div>
           </div>
           </div>
-          <input type="hidden" id="category" name="category" >
+          <input type="hidden" id="category" name="category">
+          <input type="hidden" id="send" name="send" value="false">
           </form>
-          
-          
-          <?php
-          
-            if(isset($_POST['category'])){
-              $category = $_POST['category'];
-              if($category == "Categoria"){
-                
-                
-                $producto = $_POST['buscar'];
-                $objHumano = new ControladorProducto();
-                $arrayHumano = $objHumano->ctrConsultarPorCategoria($producto);
-                
-                foreach ($arrayHumano as $campo) {
-                  echo $campo['id_producto'];
-                  echo "http://localhost/ALMACEN/vista/img/up/" . $campo['foto'];
-                  echo "<br>";
-                }
-                
-              }
-              elseif($category == "Nombre"){
-                $producto = $_POST['buscar'];
-                $objHumano = new ControladorProducto();
-                $arrayHumano = $objHumano->ctrConsultarPorNombre($producto);
-                
-                foreach ($arrayHumano as $campo) {
-                  echo $campo['id_producto'];
-                  echo "http://localhost/ALMACEN/vista/img/up/" . $campo['foto'];
-                }
-                
-
-              }
-            }else{
-              
-            }
-
-          ?>
-
           <div class="box-body">  
       <form method="POST" id="formuAprendiz">
         <div class="text-center" style="margin-top: 20px; " class="col-md-2">
@@ -133,14 +96,45 @@
             </tr>
           </thead>
           <tbody>
-            <?php
-            $objHumano = new ControladorProducto();
-            $arrayHumano = $objHumano->ctrListarProductos($start, $limit);
 
-            foreach ($arrayHumano as $campo) {
+          <?php
+            if((isset($_POST['category'])) && ($_POST['send'] == "true")) {
+              $category = $_POST['category'];
+              if($category == "Categoria"){
+                
+                
+                $producto = $_POST['buscar'];
+                $objHumano = new ControladorProducto();
+                $arrayHumano = $objHumano->ctrConsultarPorCategoria($producto);
+                
+                if (empty($arrayHumano)){
+                  echo "No hay nada para mostrar";
+                }
+                
+              }elseif($category == "Nombre"){
+                $producto = $_POST['buscar'];
+                $objHumano = new ControladorProducto();
+                $arrayHumano = $objHumano->ctrConsultarPorNombre($producto);
+                
+                if (empty($arrayHumano)){
+                  echo "No hay nada para mostrar";
+                }
+              }
+            }else{
+              $objHumano = new ControladorProducto();
+              $arrayHumano = $objHumano->ctrListarProductos($start, $limit);
+            }
+
+          ?>
+
+            <?php
+
+foreach ($arrayHumano as $campo) {
               $cod = $campo['id_producto'];
               $foto = "http://localhost/ALMACEN/vista/img/up/" . $campo['foto'];
             ?>
+
+            
               <div>
 
                 <h1 class="dpl" id="<?php echo 'umed' . $cod; ?>"><?php echo $campo['unidadMedida'];  ?></h1>

@@ -4,6 +4,7 @@ function validate(e){
     console.log(document.getElementById("buscar").value);
     let buscar = document.getElementById("buscar");
     let categoria = document.getElementById("categoria");
+    let send = document.getElementById('send').value;
 
     lVali = true;
     if(buscar.value == ""){
@@ -24,9 +25,10 @@ function validate(e){
     }
 
 
-
     document.getElementById('category').value = categoria.options[categoria.selectedIndex].text;
+    // console.log(document.getElementById('send').value);
     if (lVali == true) {
+        document.getElementById('send').value = "true";
         formulario.submit();
     }
 }
