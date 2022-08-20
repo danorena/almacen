@@ -410,12 +410,12 @@ class ProductoDao
     }
 
 
-    public function mdlConsultarPorProducto($producto)
+    public function mdlConsultarPorNombre($producto)
     {
         /*====================================================
                 INSGRESAR LA CONSULTA, PUEDE SER SP O QUERY
             ====================================================*/
-        $sql = "call spConsultarProductosPorproducto(?);";
+        $sql = "call spConsultarProductosPorNombre(?);";
 
         try {
 

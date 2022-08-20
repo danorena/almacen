@@ -45,7 +45,7 @@
                 <!-- small box -->
                 <div class="input-group">
                   <span class="input-group-addon">Buscar</span>
-                  <input id="buscar" name="buscar" type="text" class="form-control">
+                  <input id="buscar" name="buscar" type="text" class="form-control" required>
                   
                 </div>
               </div>
@@ -56,7 +56,7 @@
               <div class="col-lg-6 col-xs-6">
                 <!-- small box -->
                 <div class="input-group">
-                <select class="form-control" name="" id="categoria">
+                <select class="form-control" name="" id="categoria" required>
                   <option value="" disabled selected>Buscar por...</option>
                   <option value="inpCategoria">Categoria</option>
                   <option value="inpNombre">Nombre</option>
@@ -67,9 +67,46 @@
             </div>
           </div>
           </div>
-
-
+          <input type="hidden" id="category" name="category" >
           </form>
+          
+          
+          <?php
+          
+            if(isset($_POST['category'])){
+              $category = $_POST['category'];
+              if($category == "Categoria"){
+                
+                
+                $producto = $_POST['buscar'];
+                $objHumano = new ControladorProducto();
+                $arrayHumano = $objHumano->ctrConsultarPorCategoria($producto);
+                
+                foreach ($arrayHumano as $campo) {
+                  echo $campo['id_producto'];
+                  echo "http://localhost/ALMACEN/vista/img/up/" . $campo['foto'];
+                  echo "<br>";
+                }
+                
+              }
+              elseif($category == "Nombre"){
+                $producto = $_POST['buscar'];
+                $objHumano = new ControladorProducto();
+                $arrayHumano = $objHumano->ctrConsultarPorNombre($producto);
+                
+                foreach ($arrayHumano as $campo) {
+                  echo $campo['id_producto'];
+                  echo "http://localhost/ALMACEN/vista/img/up/" . $campo['foto'];
+                }
+                
+
+              }
+            }else{
+              
+            }
+
+          ?>
+
           <div class="box-body">  
       <form method="POST" id="formuAprendiz">
         <div class="text-center" style="margin-top: 20px; " class="col-md-2">

@@ -25,9 +25,8 @@ function validate(e){
 
 
 
+    document.getElementById('category').value = categoria.options[categoria.selectedIndex].text;
     if (lVali == true) {
         formulario.submit();
-    }else{
-        console.log(categoria.options[categoria.selectedIndex].text);
     }
 }

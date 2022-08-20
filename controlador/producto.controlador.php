@@ -36,11 +36,11 @@ class ControladorProducto
         return $arrayProveedor;
     } //metodo
 
-    public function ctrConsultarPorProducto($producto)
+    public function ctrConsultarPorNombre($producto)
     {
         $objProveedorDao = new ProductoDao($this->objDtoProducto);
 
-        $arrayProveedor = $objProveedorDao->mdlConsultarPorproducto($producto)->fetchAll();
+        $arrayProveedor = $objProveedorDao->mdlConsultarPorNombre($producto)->fetchAll();
         
         return $arrayProveedor;
     } //metodo
