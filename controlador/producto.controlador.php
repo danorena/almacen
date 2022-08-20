@@ -26,6 +26,25 @@ class ControladorProducto
 
         return $arrayProveedor;
     } //metodo 
+    
+    public function ctrConsultarPorCategoria($categoria)
+    {
+        $objProveedorDao = new ProductoDao($this->objDtoProducto);
+
+        $arrayProveedor = $objProveedorDao->mdlConsultarPorCategoria($categoria)->fetchAll();
+        
+        return $arrayProveedor;
+    } //metodo
+
+    public function ctrConsultarPorProducto($producto)
+    {
+        $objProveedorDao = new ProductoDao($this->objDtoProducto);
+
+        $arrayProveedor = $objProveedorDao->mdlConsultarPorproducto($producto)->fetchAll();
+        
+        return $arrayProveedor;
+    } //metodo
+
 
     public function ctrPaginarProductos()
     {

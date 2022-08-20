@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="vista/css/producto.css">
 <script src="vista/js/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="vista/css/bootstrap.min.css" />  
-<script src="vista/js/bootstrap.min.js"></script>  
+<link rel="stylesheet" href="vista/css/bootstrap.min.css" />
+<script src="vista/js/bootstrap.min.js"></script>
 <script src="vista/js/jquery.min.js"></script>
 
 <!-- Content Wrapper. Contains page content -->
@@ -19,80 +19,63 @@
 
   <!-- Main content -->
   <section class="content">
-  <?php 
+    <?php
     $limit = isset($_POST["limit-records"]) ? $_POST["limit-records"] : 10;
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $start = ($page - 1) * $limit;
     $objHumano = new ControladorProducto();
     $custCount = $objHumano->ctrPaginarProductos();
-    $total = $custCount[0]['id']; 
-    $pages = ceil( $total / $limit ); 
-    
+    $total = $custCount[0]['id'];
+    $pages = ceil($total / $limit);
+
     $Previous = $page - 1;
     $Next = $page + 1;
-  ?>
+    $ruta = "productos";
+    ?>
     <!-- Default box -->
     <div class="box ">
       <div class="box-header with-border">
-      <div class="col-md-10">
-        <nav aria-label="Page navigation">
-        <ul class="pagination">
-            <li>
-            <?php
-                if($Previous<=0){
-                    echo "<style>
-                    .previous
-                    {
-                        pointer-events:none;
-                    }
-                </style>";
-                    
-                }
-            ?>
-            <a class ="previous" href="index.php?ruta=productos&page=<?= $Previous; ?>" aria-label="Previous">
-                <span aria-hidden="true">« Anterior</span>
-            </a>
-            </li>
-            <?php for($i = 1; $i<= $pages; $i++) : 
-            if ($i==$page) {$active = "class='active'"; 
-            }else {$active = ""; } 
-            ?>
-            <li <?php echo $active; ?>>
-            <a href="index.php?ruta=productos&page=<?= $i; ?>"><?= $i; ?></a>
-            </li>
-            <?php endfor; ?> 
-            
-            <li>
-            <?php
-                if($Next-1==$pages){
-                    echo "<style>
-                    .next
-                    {
-                        pointer-events:none;
-                    }
-                </style>";
-                    
-                }
-            ?>
-            <a class ="next" href="index.php?ruta=productos&page=<?= $Next; ?>" aria-label="Next">
-                <span aria-hidden="true">Siguiente »</span>
-            </a>
-            </li>
-        </ul>
-        </nav>
-    </div> 
-    <div class="text-center" style="margin-top: 20px; " class="col-md-2">
-        <form method="post" action="#">Mostrar
-        <select name="limit-records" id="limit-records">
-        <?php foreach([10] as $limit): ?>
-            <option <?php if( isset($_POST["limit-records"]) && $_POST["limit-records"] == $limit) echo "selected" ?> value="<?= $limit; ?>"><?= $limit; ?></option>
-        <?php endforeach; ?>
-        </select>
-        resultados
-        </form>
-    </div>
-    </div>
-    <div style="overflow-y: auto;">
+        <div class="col-md-4">
+          <form method="POST" id= 'formQuery'>
+          
+          <!-- ROW 1 -->
+          <div class="row">
+          
+            <div class="col-lg-8 col-xs-8">
+                <!-- small box -->
+                <div class="input-group">
+                  <span class="input-group-addon">Buscar</span>
+                  <input id="buscar" name="buscar" type="text" class="form-control">
+                  
+                </div>
+              </div>
+              <button class="btn btn-primary" id="buscador" type="submit" value="Buscar" onclick="validate(event)">
+                <i class="fa fa-barcode"></i> Buscar 
+              </button>
+              <!-- ./col -->
+              <div class="col-lg-6 col-xs-6">
+                <!-- small box -->
+                <div class="input-group">
+                <select class="form-control" name="" id="categoria">
+                  <option value="" disabled selected>Buscar por...</option>
+                  <option value="inpCategoria">Categoria</option>
+                  <option value="inpNombre">Nombre</option>
+                </select>
+                
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+
+
+          </form>
+          <div class="box-body">  
+      <form method="POST" id="formuAprendiz">
+        <div class="text-center" style="margin-top: 20px; " class="col-md-2">
+        </div>
+      </div>
+      <div style="overflow-y: auto;">
         <div class="box-tools pull-right">
           <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
             <i class="fa fa-minus"></i></button>
@@ -101,20 +84,19 @@
         </div>
       </div>
       <div class="table-responsive">
-      <table id="" class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>Nombre</th>
-                    <th>Producto</th>
-                    <th>Categorias</th>
-                    <th>Cantidad</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
+        <table id="" class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>Nombre</th>
+              <th>Producto</th>
+              <th>Categorias</th>
+              <th>Cantidad</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
           <tbody>
             <?php
-
             $objHumano = new ControladorProducto();
             $arrayHumano = $objHumano->ctrListarProductos($start, $limit);
 
@@ -165,7 +147,9 @@
                 <td id="<?php echo 'ced' . $cod; ?>">
                   <div class="div_img">
                     <a data-toggle='modal' data-target="#modalMostrar" style="cursor:pointer">
-                      <img loading="lazy" src="<?php echo $foto ?>" alt="" class="img_table" onclick='mostrarProducto(<?php echo "umed" . $cod ?>,<?php echo "nom" . $cod ?>,<?php echo "cant" . $cod ?>,<?php echo "img" . $cod ?>,<?php echo "ctli" . $cod ?>,<?php echo "pcm" . $cod ?>,<?php echo "pvt" . $cod ?>,<?php echo "pint" . $cod ?>,<?php echo "mlts" . $cod ?>,<?php echo "srv" . $cod ?>,<?php echo "cntf" . $cod ?>,<?php echo "pract" . $cod ?>,<?php echo "dfc" . $cod ?>,<?php echo "ref" . $cod ?>,<?php echo "med" . $cod ?>,<?php echo "pres" . $cod ?>,<?php echo "ubif" . $cod ?>,<?php echo "prodequi" . $cod ?>,<?php echo "unitpro" . $cod ?>,<?php echo "totpro" . $cod ?>,<?php echo "stokmin" . $cod ?>,<?php echo "stokmax" . $cod ?>,<?php echo "tiemrep" . $cod ?>,<?php echo "cuentInv" . $cod ?>,<?php echo "contIng" . $cod ?>,<?php echo "contAj" . $cod ?>,<?php echo "contDev" . $cod ?>,<?php echo "contCost" . $cod ?>,<?php echo "devCom" . $cod ?>,<?php echo "contGas" . $cod ?>,<?php echo "contgasAju" . $cod ?>,<?php echo "impCom" . $cod ?>,<?php echo "impVen" . $cod ?>,<?php echo "user_id" . $cod ?>)'>
+                      <button type='button' class='btn btn-success' data-toggle='modal' onclick='mostrarProducto(<?php echo "umed" . $cod ?>,<?php echo "nom" . $cod ?>,<?php echo "cant" . $cod ?>,<?php echo "img" . $cod ?>,<?php echo "ctli" . $cod ?>,<?php echo "pcm" . $cod ?>,<?php echo "pvt" . $cod ?>,<?php echo "pint" . $cod ?>,<?php echo "mlts" . $cod ?>,<?php echo "srv" . $cod ?>,<?php echo "cntf" . $cod ?>,<?php echo "pract" . $cod ?>,<?php echo "dfc" . $cod ?>,<?php echo "ref" . $cod ?>,<?php echo "med" . $cod ?>,<?php echo "pres" . $cod ?>,<?php echo "ubif" . $cod ?>,<?php echo "prodequi" . $cod ?>,<?php echo "unitpro" . $cod ?>,<?php echo "totpro" . $cod ?>,<?php echo "stokmin" . $cod ?>,<?php echo "stokmax" . $cod ?>,<?php echo "tiemrep" . $cod ?>,<?php echo "cuentInv" . $cod ?>,<?php echo "contIng" . $cod ?>,<?php echo "contAj" . $cod ?>,<?php echo "contDev" . $cod ?>,<?php echo "contCost" . $cod ?>,<?php echo "devCom" . $cod ?>,<?php echo "contGas" . $cod ?>,<?php echo "contgasAju" . $cod ?>,<?php echo "impCom" . $cod ?>,<?php echo "impVen" . $cod ?>,<?php echo "user_id" . $cod ?>)'>Ver producto</button>
+
+
                     </a>
                   </div>
                 </td>
@@ -212,12 +196,60 @@
             ?>
           </tbody>
         </table>
+        
       </div>
+            
       <!-- /.box-body -->
     </div>
     <!-- /.box -->
-
+    
   </section>
+  <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li>
+                <?php
+                if ($Previous <= 0) {
+                  echo "<style>
+                    .previous
+                    {
+                        pointer-events:none;
+                    }
+                </style>";
+                }
+                ?>
+                <a class="previous" href="index.php?ruta=<?= $ruta; ?>&page=<?= $Previous; ?>" aria-label="Previous">
+                  <span aria-hidden="true">« Anterior</span>
+                </a>
+              </li>
+              <?php for ($i = 1; $i <= $pages; $i++) :
+                if ($i == $page) {
+                  $active = "class='active'";
+                } else {
+                  $active = "";
+                }
+              ?>
+                <li <?php echo $active; ?>>
+                  <a href="index.php?ruta=<?= $ruta; ?>&page=<?= $i; ?>"><?= $i; ?></a>
+                </li>
+              <?php endfor; ?>
+
+              <li>
+                <?php
+                if ($Next - 1 == $pages) {
+                  echo "<style>
+                    .next
+                    {
+                        pointer-events:none;
+                    }
+                </style>";
+                }
+                ?>
+                <a class="next" href="index.php?ruta=<?= $ruta; ?>&page=<?= $Next; ?>" aria-label="Next">
+                  <span aria-hidden="true">Siguiente »</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
   <!-- /.content -->
 </div>
 
@@ -605,7 +637,9 @@
     </div>
   </div>
 </div>
+<div id="ohsnap">
 
+</div>
 <!-- Modal Modificar-->
 <div tabindex="-1" class="modal fade" id="modalModificar" role="dialog">
 

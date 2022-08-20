@@ -43,6 +43,8 @@ session_start();
   <link rel="stylesheet" href="vista/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
   <!-- Estilos de los mensajes sweetalert2-->
   <link rel="stylesheet" href="vista/css/sweetalert2.min.css">
+  <!-- Oh snap css -->
+  <link rel="stylesheet" href="vista/css/ohsnap.css">
   <!-- javascript de los mensajes sweetalert2-->
   <script src="vista/js/sweetalert2.all.min.js"></script>
 </head>
@@ -140,7 +142,8 @@ session_start();
 
   ?>
 
-
+  <!-- Oh snap JS -->
+  <script src="vista/js/ohsnap.js"></script>
   <!-- jQuery 3 -->
   <script src="vista/bower_components/jquery/dist/jquery.min.js"></script>
   <!-- jQuery UI 1.11.4 -->
@@ -183,6 +186,9 @@ session_start();
   <!-- DataTables -->
   <script src="vista/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
   <script src="vista/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+  <!-- Validate productos -->
+  <script src= "vista/js/productos.js"></script>
+  
   <script>
     $(function() {
       $('#tablaHumano').DataTable({
