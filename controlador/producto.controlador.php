@@ -27,20 +27,20 @@ class ControladorProducto
         return $arrayProveedor;
     } //metodo 
     
-    public function ctrConsultarPorCategoria($categoria)
+    public function ctrConsultarPorCategoria($categoria,$start, $limit)
     {
         $objProveedorDao = new ProductoDao($this->objDtoProducto);
 
-        $arrayProveedor = $objProveedorDao->mdlConsultarPorCategoria($categoria)->fetchAll();
+        $arrayProveedor = $objProveedorDao->mdlConsultarPorCategoria($categoria,$start, $limit)->fetchAll();
         
         return $arrayProveedor;
     } //metodo
 
-    public function ctrConsultarPorNombre($producto)
+    public function ctrConsultarPorNombre($producto,$start, $limit)
     {
         $objProveedorDao = new ProductoDao($this->objDtoProducto);
 
-        $arrayProveedor = $objProveedorDao->mdlConsultarPorNombre($producto)->fetchAll();
+        $arrayProveedor = $objProveedorDao->mdlConsultarPorNombre($producto,$start, $limit)->fetchAll();
         
         return $arrayProveedor;
     } //metodo
@@ -54,6 +54,24 @@ class ControladorProducto
 
         return $arrayProveedor;
     } //metodo 
+
+    public function ctrPaginarQueryCategoria($categoria)
+    {
+        $objProveedorDao = new ProductoDao($this->objDtoProducto);
+
+        $arrayProveedor = $objProveedorDao->mdlPaginarQueryCategoria($categoria)->fetchAll();
+
+        return $arrayProveedor;
+    } //metodo
+
+    public function ctrPaginarQueryNombre($nombre)
+    {
+        $objProveedorDao = new ProductoDao($this->objDtoProducto);
+
+        $arrayProveedor = $objProveedorDao->mdlPaginarQueryNombre($nombre)->fetchAll();
+
+        return $arrayProveedor;
+    } //metodo
 
     public function ctrListarProducto($var)
     {

@@ -381,12 +381,12 @@ class ProductoDao
         return $resultSet;
     }
 
-    public function mdlConsultarPorCategoria($categoria)
+    public function mdlConsultarPorCategoria($producto,$start, $limit)
     {
         /*====================================================
                 INSGRESAR LA CONSULTA, PUEDE SER SP O QUERY
             ====================================================*/
-        $sql = "call spConsultarProductosPorCategoria(?);";
+        $sql = "call spConsultarProductosPorCategoria(?,?,?);";
 
         try {
 
@@ -395,8 +395,10 @@ class ProductoDao
                 ====================================================*/
             $conexion = new Conexion();
             $stmt = $conexion->conectar()->prepare($sql);
-            $stmt->bindParam(1, $categoria, PDO::PARAM_STR);
-
+            $stmt->bindParam(1, $producto, PDO::PARAM_STR);
+            $stmt->bindParam(2, $start, PDO::PARAM_INT);
+            $stmt->bindParam(3, $limit, PDO::PARAM_INT);
+            
             $stmt->execute();
 
             $resultSet = $stmt;
@@ -409,13 +411,15 @@ class ProductoDao
         return $resultSet;
     }
 
+    
 
-    public function mdlConsultarPorNombre($producto)
+
+    public function mdlConsultarPorNombre($producto,$start, $limit)
     {
         /*====================================================
                 INSGRESAR LA CONSULTA, PUEDE SER SP O QUERY
             ====================================================*/
-        $sql = "call spConsultarProductosPorNombre(?);";
+        $sql = "call spConsultarProductosPorNombre(?,?,?);";
 
         try {
 
@@ -425,7 +429,9 @@ class ProductoDao
             $conexion = new Conexion();
             $stmt = $conexion->conectar()->prepare($sql);
             $stmt->bindParam(1, $producto, PDO::PARAM_STR);
-
+            $stmt->bindParam(2, $start, PDO::PARAM_INT);
+            $stmt->bindParam(3, $limit, PDO::PARAM_INT);
+            
             $stmt->execute();
 
             $resultSet = $stmt;
@@ -465,6 +471,63 @@ class ProductoDao
 		
 			return $resultSet;
 		}
+
+        function mdlPaginarQueryCategoria($categoria)
+			{
+			/*====================================================
+				INSGRESAR LA CONSULTA, PUEDE SER SP O QUERY
+			====================================================*/
+			$sql = "call SpCountCategoria(?);";
+		
+			try {
+		
+				/*====================================================
+							INSTACIAR LA BASE DE DATOS
+					====================================================*/
+                $conexion = new Conexion();
+                $stmt = $conexion->conectar()->prepare($sql);
+                $stmt->bindParam(1, $categoria, PDO::PARAM_STR);
+
+                $stmt->execute();
+		
+				$resultSet = $stmt;
+			} catch (Exception $e) {
+				echo "Se ha presentado un error en la clase DAO " . $e->getMessage() . " El error se encuentra la linea: " . $e->getLine();
+			} catch (PDOException $ex) {
+				echo "Se ha presentado un error al listar los datos " . $ex->getMessage() . " El error se encuentra la linea: " . $ex->getLine();
+			} // FIN DEL TRY-CATCH
+		
+			return $resultSet;
+		}
+
+        function mdlPaginarQueryNombre($nombre)
+			{
+			/*====================================================
+				INSGRESAR LA CONSULTA, PUEDE SER SP O QUERY
+			====================================================*/
+			$sql = "call SpCountNombre(?);";
+		
+			try {
+		
+				/*====================================================
+							INSTACIAR LA BASE DE DATOS
+					====================================================*/
+                $conexion = new Conexion();
+                $stmt = $conexion->conectar()->prepare($sql);
+                $stmt->bindParam(1, $nombre, PDO::PARAM_STR);
+
+                $stmt->execute();
+		
+				$resultSet = $stmt;
+			} catch (Exception $e) {
+				echo "Se ha presentado un error en la clase DAO " . $e->getMessage() . " El error se encuentra la linea: " . $e->getLine();
+			} catch (PDOException $ex) {
+				echo "Se ha presentado un error al listar los datos " . $ex->getMessage() . " El error se encuentra la linea: " . $ex->getLine();
+			} // FIN DEL TRY-CATCH
+		
+			return $resultSet;
+		}
+
 
     public function mdlListarCategorias()
     {

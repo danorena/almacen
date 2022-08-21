@@ -19,19 +19,7 @@
 
   <!-- Main content -->
   <section class="content">
-    <?php
-    $limit = isset($_POST["limit-records"]) ? $_POST["limit-records"] : 10;
-    $page = isset($_GET['page']) ? $_GET['page'] : 1;
-    $start = ($page - 1) * $limit;
-    $objHumano = new ControladorProducto();
-    $custCount = $objHumano->ctrPaginarProductos();
-    $total = $custCount[0]['id'];
-    $pages = ceil($total / $limit);
-
-    $Previous = $page - 1;
-    $Next = $page + 1;
-    $ruta = "productos";
-    ?>
+    
     <!-- Default box -->
     <div class="box ">
       <div class="box-header with-border">
@@ -98,6 +86,11 @@
           <tbody>
 
           <?php
+            
+            $limit = isset($_POST["limit-records"]) ? $_POST["limit-records"] : 10;
+            $page = isset($_GET['page']) ? $_GET['page'] : 1;
+            $start = ($page - 1) * $limit;
+
             if((isset($_POST['category'])) && ($_POST['send'] == "true")) {
               $category = $_POST['category'];
               if($category == "Categoria"){
@@ -105,7 +98,9 @@
                 
                 $producto = $_POST['buscar'];
                 $objHumano = new ControladorProducto();
-                $arrayHumano = $objHumano->ctrConsultarPorCategoria($producto);
+                $arrayHumano = $objHumano->ctrConsultarPorCategoria($producto,$start, $limit);
+                $custCount = $objHumano->ctrPaginarQueryCategoria($producto);
+                $total = $custCount[0]['COUNT(p.id_producto)'];
                 
                 if (empty($arrayHumano)){
                   echo "No hay nada para mostrar";
@@ -114,7 +109,9 @@
               }elseif($category == "Nombre"){
                 $producto = $_POST['buscar'];
                 $objHumano = new ControladorProducto();
-                $arrayHumano = $objHumano->ctrConsultarPorNombre($producto);
+                $arrayHumano = $objHumano->ctrConsultarPorNombre($producto,$start, $limit);
+                $custCount = $objHumano->ctrPaginarQueryNombre($producto);
+                $total = $custCount[0]['COUNT(p.id_producto)'];
                 
                 if (empty($arrayHumano)){
                   echo "No hay nada para mostrar";
@@ -123,15 +120,23 @@
             }else{
               $objHumano = new ControladorProducto();
               $arrayHumano = $objHumano->ctrListarProductos($start, $limit);
+              $custCount = $objHumano->ctrPaginarProductos();
+              $total = $custCount[0]['id'];
+              
             }
-
+            
+            $pages = ceil($total / $limit);
+        
+            $Previous = $page - 1;
+            $Next = $page + 1;
+            $ruta = "productos";
           ?>
 
             <?php
 
-foreach ($arrayHumano as $campo) {
-              $cod = $campo['id_producto'];
-              $foto = "http://localhost/ALMACEN/vista/img/up/" . $campo['foto'];
+              foreach ($arrayHumano as $campo) {
+                $cod = $campo['id_producto'];
+                $foto = "http://localhost/ALMACEN/vista/img/up/" . $campo['foto'];
             ?>
 
             
