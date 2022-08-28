@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-07-2022 a las 01:05:42
+-- Tiempo de generación: 28-08-2022 a las 01:41:48
 -- Versión del servidor: 10.4.22-MariaDB
 -- Versión de PHP: 8.1.2
 
@@ -61,6 +61,20 @@ IF (@CANTIDAD_TOTAL >= 0 ) THEN
    END IF;
 END$$
 
+DROP PROCEDURE IF EXISTS `spConsultarProductosPorCategoria`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarProductosPorCategoria` (IN `_categoria` VARCHAR(150))  BEGIN
+
+SELECT * FROM categoria_producto as cp JOIN productos as p ON (cp.id_producto = p.id_producto) JOIN categorias as c ON (cp.id_categoria = c.id_categoria) WHERE c.nombreCategoria = _categoria;
+
+END$$
+
+DROP PROCEDURE IF EXISTS `spConsultarProductosPorNombre`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultarProductosPorNombre` (IN `_nombre` VARCHAR(150))  BEGIN
+
+SELECT * FROM categoria_producto as cp JOIN productos as p ON (cp.id_producto = p.id_producto) WHERE p.nombreProducto = _nombre;
+
+END$$
+
 DROP PROCEDURE IF EXISTS `SpConsultarSolicitudesAprovadas`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SpConsultarSolicitudesAprovadas` ()  NO SQL
 BEGIN
@@ -104,7 +118,7 @@ END$$
 DROP PROCEDURE IF EXISTS `SpConsultProductos`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SpConsultProductos` ()  NO SQL
 BEGIN
-SELECT * FROM productos P INNER JOIN usuarios U ON(P.usuario_id = U.id_usuario);
+SELECT * FROM productos P INNER JOIN usuarios U ON(P.usuario_id = U.id_usuario) LIMIT 10;
 END$$
 
 DROP PROCEDURE IF EXISTS `SpConsultProductosProveedor`$$
@@ -142,6 +156,20 @@ DROP PROCEDURE IF EXISTS `spConsultUsers`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `spConsultUsers` ()  NO SQL
 BEGIN
 SELECT id_usuario AS id, UserName AS Usuario, Password AS Contraseña, Rol AS Rol_user FROM usuarios;
+END$$
+
+DROP PROCEDURE IF EXISTS `spCountCategoria`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spCountCategoria` (IN `_categoria` VARCHAR(150))  BEGIN
+
+SELECT COUNT(p.id_producto) FROM categoria_producto as cp JOIN productos as p ON (cp.id_producto = p.id_producto) JOIN categorias as c ON (cp.id_categoria = c.id_categoria) WHERE c.nombreCategoria = _categoria;
+
+END$$
+
+DROP PROCEDURE IF EXISTS `spCountNombre`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spCountNombre` (IN `_nombre` VARCHAR(150))  BEGIN
+
+SELECT COUNT(p.id_producto) FROM categoria_producto as cp JOIN productos as p ON (cp.id_producto = p.id_producto) WHERE p.nombreProducto = _nombre;
+
 END$$
 
 DROP PROCEDURE IF EXISTS `SpCreateCategoria`$$
@@ -437,13 +465,14 @@ CREATE TABLE IF NOT EXISTS `categorias` (
   `nombreCategoria` varchar(50) NOT NULL,
   PRIMARY KEY (`id_categoria`),
   UNIQUE KEY `nombreCategoria` (`nombreCategoria`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `categorias`
 --
 
 INSERT INTO `categorias` (`id_categoria`, `nombreCategoria`) VALUES
+(6, 'Cuerina'),
 (1, 'CUERO'),
 (4, 'ENCERADO'),
 (2, 'HILO'),
@@ -471,7 +500,7 @@ CREATE TABLE IF NOT EXISTS `categoria_producto` (
 INSERT INTO `categoria_producto` (`id`, `id_categoria`, `id_producto`) VALUES
 (1, 5, 1),
 (2, 5, 2),
-(3, 5, 3),
+(3, 6, 3),
 (4, 5, 4),
 (5, 5, 5),
 (6, 5, 6),
@@ -591,7 +620,7 @@ INSERT INTO `categoria_producto` (`id`, `id_categoria`, `id_producto`) VALUES
 (120, 5, 120),
 (121, 5, 121),
 (122, 5, 122),
-(123, 5, 123);
+(123, 6, 123);
 
 -- --------------------------------------------------------
 
@@ -729,17 +758,17 @@ CREATE TABLE IF NOT EXISTS `productos` (
 --
 
 INSERT INTO `productos` (`id_producto`, `unidadMedida`, `nombreProducto`, `cantidad`, `foto`, `controlInventario`, `paraConsumo`, `paraVenta`, `produccionInterna`, `manejaLotes`, `servicio`, `conteoFisicas`, `productoActivo`, `datosFabricante`, `refetencia`, `medidas`, `presentacion`, `ubicacionFisica`, `productoEquivalente`, `unitarioPromedio`, `totalPromedio`, `stockMinimo`, `stockMaximo`, `tiempoReposicion`, `cuentaInventario`, `contableDeIngresos`, `contableIngresoAjuste`, `contableDevolucionVentas`, `contableCostos`, `devolucionCompras`, `contableGastos`, `contableGastosPorAjuste`, `impuestoCompras`, `impuestoVentas`, `usuario_id`) VALUES
-(3, '34', 'suela', 5, '21-12-2021-10-30-46-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '34', '', '', '', 0, 0, 0, 0, '0', 5, '', '', '', '', '', '', '', '', '', 2),
-(4, '35', 'suela', 4, '21-12-2021-10-32-14-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '35', '', '', '', 0, 0, 0, 0, '0', 4, '', '', '', '', '', '', '', '', '', 2),
-(5, '36', 'suela', 8, '21-12-2021-10-33-33-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '36', '', '', '', 0, 0, 0, 0, '0', 8, '', '', '', '', '', '', '', '', '', 2),
-(6, '37', 'suela', 7, '21-12-2021-10-34-30-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '37', '', '', '', 0, 0, 0, 0, '0', 7, '', '', '', '', '', '', '', '', '', 2),
-(7, '38', 'suela', 8, '21-12-2021-10-35-18-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '38', '', '', '', 0, 0, 0, 0, '0', 8, '', '', '', '', '', '', '', '', '', 2),
-(8, '39', 'suela', 11, '21-12-2021-10-36-08-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '39', '', '', '', 0, 0, 0, 0, '0', 11, '', '', '', '', '', '', '', '', '', 2),
-(9, '40', 'suela', 14, '21-12-2021-10-36-56-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '40', '', '', '', 0, 0, 0, 0, '0', 14, '', '', '', '', '', '', '', '', '', 2),
-(10, '34', 'SUELA', 4, '21-12-2021-10-41-25-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-M-8012-C', '34', '', '', '', 0, 0, 0, 0, '0', 4, '', '', '', '', '', '', '', '', '', 2),
-(11, '35', 'SUELA', 6, '21-12-2021-10-42-41-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-M-8012-C', '35', '', '', '', 0, 0, 0, 0, '0', 6, '', '', '', '', '', '', '', '', '', 2),
-(12, '36', 'SUELA', 7, '21-12-2021-10-43-46-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-M-8012-C', '36', '', '', '', 0, 0, 0, 0, '0', 7, '', '', '', '', '', '', '', '', '', 2),
-(13, '37', 'SUELA', 18, '21-12-2021-10-44-25-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-M-8012-C', '37', '', '', '', 0, 0, 0, 0, '0', 18, '', '', '', '', '', '', '', '', '', 2),
+(3, '34', 'Zapato', 5, '21-12-2021-10-30-46-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '34', '', '', '', 0, 0, 0, 0, '0', 5, '', '', '', '', '', '', '', '', '', 2),
+(4, '35', 'Zapato', 4, '21-12-2021-10-32-14-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '35', '', '', '', 0, 0, 0, 0, '0', 4, '', '', '', '', '', '', '', '', '', 2),
+(5, '36', 'Zapato', 8, '21-12-2021-10-33-33-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '36', '', '', '', 0, 0, 0, 0, '0', 8, '', '', '', '', '', '', '', '', '', 2),
+(6, '37', 'Zapato', 7, '21-12-2021-10-34-30-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '37', '', '', '', 0, 0, 0, 0, '0', 7, '', '', '', '', '', '', '', '', '', 2),
+(7, '38', 'Zapato', 8, '21-12-2021-10-35-18-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '38', '', '', '', 0, 0, 0, 0, '0', 8, '', '', '', '', '', '', '', '', '', 2),
+(8, '39', 'Zapato', 11, '21-12-2021-10-36-08-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '39', '', '', '', 0, 0, 0, 0, '0', 11, '', '', '', '', '', '', '', '', '', 2),
+(9, '40', 'Zapato', 14, '21-12-2021-10-36-56-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-W/M8018Y', '40', '', '', '', 0, 0, 0, 0, '0', 14, '', '', '', '', '', '', '', '', '', 2),
+(10, '34', 'Zapato', 4, '21-12-2021-10-41-25-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-M-8012-C', '34', '', '', '', 0, 0, 0, 0, '0', 4, '', '', '', '', '', '', '', '', '', 2),
+(11, '35', 'Zapato', 6, '21-12-2021-10-42-41-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-M-8012-C', '35', '', '', '', 0, 0, 0, 0, '0', 6, '', '', '', '', '', '', '', '', '', 2),
+(12, '36', 'Zapato', 7, '21-12-2021-10-43-46-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-M-8012-C', '36', '', '', '', 0, 0, 0, 0, '0', 7, '', '', '', '', '', '', '', '', '', 2),
+(13, '37', 'Zapato', 18, '21-12-2021-10-44-25-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-M-8012-C', '37', '', '', '', 0, 0, 0, 0, '0', 18, '', '', '', '', '', '', '', '', '', 2),
 (14, '38', 'SUELA', 18, '21-12-2021-10-45-28-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-M-8012-C', '38', '', '', '', 0, 0, 0, 0, '0', 18, '', '', '', '', '', '', '', '', '', 2),
 (15, '39', 'SUELA', 23, '21-12-2021-10-46-16-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-M-8012-C', '39', '', '', '', 0, 0, 0, 0, '0', 23, '', '', '', '', '', '', '', '', '', 2),
 (16, '40', 'SUELA', 30, '21-12-2021-10-46-58-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'JD-M-8012-C', '40', '', '', '', 0, 0, 0, 0, '0', 30, '', '', '', '', '', '', '', '', '', 2),
@@ -849,7 +878,7 @@ INSERT INTO `productos` (`id_producto`, `unidadMedida`, `nombreProducto`, `canti
 (120, '24', 'SUELA', 2, '21-12-2021-02-04-01-000000.png', 0, 0, 0, 0, 0, 0, 0, 0, '', 'PAUL G2.5', '24', '', '', '', 0, 0, 0, 0, '0', 2, '', '', '', '', '', '', '', '', '', 2),
 (121, '25', 'SUELA', 2, '21-12-2021-02-05-04-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'PAUL G2.5', '25', '', '', '', 0, 0, 0, 0, '0', 2, '', '', '', '', '', '', '', '', '', 2),
 (122, '26', 'SUELA', 1, '21-12-2021-02-05-52-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'PAUL G2.5', '26', '', '', '', 0, 0, 0, 0, '0', 1, '', '', '', '', '', '', '', '', '', 2),
-(123, '27', 'SUELA', 1, '21-12-2021-02-06-34-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'PAUL G2.5', '27', '', '', '', 0, 0, 0, 0, '0', 1, '', '', '', '', '', '', '', '', '', 2);
+(123, '27', 'Plantilla', 1, '21-12-2021-02-06-34-000000.png', 0, 0, 1, 0, 0, 0, 0, 0, '', 'PAUL G2.5', '27', '', '', '', 0, 0, 0, 0, '0', 1, '', '', '', '', '', '', '', '', '', 2);
 
 -- --------------------------------------------------------
 
@@ -943,7 +972,7 @@ CREATE TABLE IF NOT EXISTS `sub_categoria` (
   `id_categoria` int(11) NOT NULL,
   `nombreCategoria` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `sub_categoria`
@@ -957,7 +986,9 @@ INSERT INTO `sub_categoria` (`id`, `id_categoria`, `nombreCategoria`) VALUES
 (7, 2, '#20'),
 (8, 5, 'suela'),
 (9, 5, 'BLANCO'),
-(10, 5, 'GRIS');
+(10, 5, 'GRIS'),
+(11, 6, 'Cuerina sim'),
+(12, 6, 'Cuerina sim');
 
 -- --------------------------------------------------------
 
@@ -971,7 +1002,7 @@ CREATE TABLE IF NOT EXISTS `sub_categoria_producto` (
   `id_sub_categoria` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `sub_categoria_producto`
@@ -983,7 +1014,6 @@ INSERT INTO `sub_categoria_producto` (`id`, `id_sub_categoria`, `id_producto`) V
 (6, 7, 1),
 (10, 8, 1),
 (15, 9, 4),
-(16, 9, 3),
 (17, 9, 5),
 (18, 9, 6),
 (19, 9, 7),
@@ -1102,7 +1132,9 @@ INSERT INTO `sub_categoria_producto` (`id`, `id_sub_categoria`, `id_producto`) V
 (138, 9, 120),
 (139, 9, 121),
 (140, 9, 122),
-(141, 9, 123);
+(141, 9, 123),
+(146, 11, 123),
+(147, 12, 123);
 
 -- --------------------------------------------------------
 

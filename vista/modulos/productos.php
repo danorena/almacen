@@ -87,49 +87,46 @@
 
           <?php
             
+            
+            
+            $objHumano = new ControladorProducto();
             $limit = isset($_POST["limit-records"]) ? $_POST["limit-records"] : 10;
             $page = isset($_GET['page']) ? $_GET['page'] : 1;
             $start = ($page - 1) * $limit;
-
-            if((isset($_POST['category'])) && ($_POST['send'] == "true")) {
+            $ruta = "productos";
+            
+            if((isset($_POST['category']) == true) && ($_POST['send'] == "true")) {
+              $total = 1;
               $category = $_POST['category'];
               if($category == "Categoria"){
-                
-                
                 $producto = $_POST['buscar'];
-                $objHumano = new ControladorProducto();
-                $arrayHumano = $objHumano->ctrConsultarPorCategoria($producto,$start, $limit);
-                $custCount = $objHumano->ctrPaginarQueryCategoria($producto);
-                $total = $custCount[0]['COUNT(p.id_producto)'];
                 
+                $arrayHumano = $objHumano->ctrConsultarPorCategoria($producto);
+                $custCount = $objHumano->ctrPaginarQueryCategoria($producto);
                 if (empty($arrayHumano)){
                   echo "No hay nada para mostrar";
                 }
                 
               }elseif($category == "Nombre"){
                 $producto = $_POST['buscar'];
-                $objHumano = new ControladorProducto();
-                $arrayHumano = $objHumano->ctrConsultarPorNombre($producto,$start, $limit);
-                $custCount = $objHumano->ctrPaginarQueryNombre($producto);
-                $total = $custCount[0]['COUNT(p.id_producto)'];
                 
+                $arrayHumano = $objHumano->ctrConsultarPorNombre($producto);
+                $custCount = $objHumano->ctrPaginarQueryNombre($producto);
                 if (empty($arrayHumano)){
                   echo "No hay nada para mostrar";
                 }
               }
             }else{
-              $objHumano = new ControladorProducto();
-              $arrayHumano = $objHumano->ctrListarProductos($start, $limit);
-              $custCount = $objHumano->ctrPaginarProductos();
-              $total = $custCount[0]['id'];
-              
-            }
-            
+                
+                $arrayHumano = $objHumano->ctrListarProductos($start, $limit);
+                $custCount = $objHumano->ctrPaginarProductos();
+                $total = $custCount[0]['id'];
+              }
             $pages = ceil($total / $limit);
-        
             $Previous = $page - 1;
             $Next = $page + 1;
-            $ruta = "productos";
+            
+            
           ?>
 
             <?php
@@ -240,6 +237,7 @@
     <!-- /.box -->
     
   </section>
+      
   <nav aria-label="Page navigation">
             <ul class="pagination">
               <li>
@@ -606,7 +604,7 @@
                       title: 'Error...',
                       text: 'Debes poner una imagen'                            
                   })
-              </script>";
+              </>";
                 break;
               case '2':
                 echo "<script>

@@ -381,12 +381,12 @@ class ProductoDao
         return $resultSet;
     }
 
-    public function mdlConsultarPorCategoria($producto,$start, $limit)
+    public function mdlConsultarPorCategoria($producto)
     {
         /*====================================================
                 INSGRESAR LA CONSULTA, PUEDE SER SP O QUERY
             ====================================================*/
-        $sql = "call spConsultarProductosPorCategoria(?,?,?);";
+        $sql = "call spConsultarProductosPorCategoria(?);";
 
         try {
 
@@ -396,8 +396,6 @@ class ProductoDao
             $conexion = new Conexion();
             $stmt = $conexion->conectar()->prepare($sql);
             $stmt->bindParam(1, $producto, PDO::PARAM_STR);
-            $stmt->bindParam(2, $start, PDO::PARAM_INT);
-            $stmt->bindParam(3, $limit, PDO::PARAM_INT);
             
             $stmt->execute();
 
@@ -414,12 +412,12 @@ class ProductoDao
     
 
 
-    public function mdlConsultarPorNombre($producto,$start, $limit)
+    public function mdlConsultarPorNombre($producto)
     {
         /*====================================================
                 INSGRESAR LA CONSULTA, PUEDE SER SP O QUERY
             ====================================================*/
-        $sql = "call spConsultarProductosPorNombre(?,?,?);";
+        $sql = "call spConsultarProductosPorNombre(?);";
 
         try {
 
@@ -429,9 +427,6 @@ class ProductoDao
             $conexion = new Conexion();
             $stmt = $conexion->conectar()->prepare($sql);
             $stmt->bindParam(1, $producto, PDO::PARAM_STR);
-            $stmt->bindParam(2, $start, PDO::PARAM_INT);
-            $stmt->bindParam(3, $limit, PDO::PARAM_INT);
-            
             $stmt->execute();
 
             $resultSet = $stmt;

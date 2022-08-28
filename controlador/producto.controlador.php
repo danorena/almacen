@@ -27,20 +27,20 @@ class ControladorProducto
         return $arrayProveedor;
     } //metodo 
     
-    public function ctrConsultarPorCategoria($categoria,$start, $limit)
+    public function ctrConsultarPorCategoria($categoria)
     {
         $objProveedorDao = new ProductoDao($this->objDtoProducto);
 
-        $arrayProveedor = $objProveedorDao->mdlConsultarPorCategoria($categoria,$start, $limit)->fetchAll();
+        $arrayProveedor = $objProveedorDao->mdlConsultarPorCategoria($categoria)->fetchAll();
         
         return $arrayProveedor;
     } //metodo
 
-    public function ctrConsultarPorNombre($producto,$start, $limit)
+    public function ctrConsultarPorNombre($producto)
     {
         $objProveedorDao = new ProductoDao($this->objDtoProducto);
 
-        $arrayProveedor = $objProveedorDao->mdlConsultarPorNombre($producto,$start, $limit)->fetchAll();
+        $arrayProveedor = $objProveedorDao->mdlConsultarPorNombre($producto)->fetchAll();
         
         return $arrayProveedor;
     } //metodo
